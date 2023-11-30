@@ -64,6 +64,9 @@ from AutoGen.IncludesAutoGen import IncludesAutoGen
 from GenFds.GenFds import resetFdsGlobalVariable
 from AutoGen.AutoGen import CalculatePriorityValue
 
+import tempfile
+import subprocess
+
 ## standard targets of build command
 gSupportedTarget = ['all', 'genc', 'genmake', 'modules', 'libraries', 'fds', 'clean', 'cleanall', 'cleanlib', 'run']
 
@@ -2769,6 +2772,21 @@ def Main():
     if MyBuild is not None:
         if not BuildError:
             MyBuild.BuildReport.GenerateReport(BuildDurationStr, LogBuildTime(MyBuild.AutoGenTime), LogBuildTime(MyBuild.MakeTime), LogBuildTime(MyBuild.GenFdsTime))
+
+            print('###############')
+            print('GENERATING FBOM')
+            print('###############')
+            print()
+
+            edk_temp_file = path.join(tempfile.gettempdir(), 'edk_temp_file')
+            with open(edk_temp_file) as file:
+                edk_path = file.readline().strip()
+                platform_path = file.readline().strip()
+                build_target = file.readline().strip()
+                build_toolchain = file.readline().strip()
+
+                #TODO add executable path and run the bom generator
+
 
     EdkLogger.SetLevel(EdkLogger.QUIET)
     EdkLogger.quiet("\n- %s -" % Conclusion)
