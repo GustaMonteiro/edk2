@@ -45,16 +45,11 @@ class WorkspaceAutoGen(AutoGen):
             self._InitWorker(Workspace, MetaFile, Target, Toolchain, Arch, *args, **kwargs)
             self._Init = True
 
-    def _WriteEdkInfos(self):
-        tempdir = tempfile.gettempdir()
-
-        edk_temp_file = path.join(tempdir, 'edk_temp_file')
-
-        with open(edk_temp_file, 'w') as file:
-            file.write(GlobalData.gWorkspace + '\n')
-            file.write(path.relpath(str(self.Platform), GlobalData.gWorkspace) + '\n')
-            file.write(self.BuildTarget + '\n')
-            file.write(self.ToolChain + '\n')
+    def _SaveEdkInfos(self):
+        GlobalData.bomEdkPath = GlobalData.gWorkspace.strip()
+        GlobalData.bomPlatformPath = path.relpath(str(self.Platform), GlobalData.gWorkspace).strip()
+        GlobalData.bomBuildTarget = str(self.BuildTarget).strip()
+        GlobalData.bomBuildToolchain = str(self.ToolChain).strip()
 
     ## Initialize WorkspaceAutoGen
     #
@@ -101,8 +96,8 @@ class WorkspaceAutoGen(AutoGen):
         self.MergeArch()
         self.ValidateBuildTarget()
 
-        # write infos to use with FBOM generator
-        self._WriteEdkInfos()
+        # save infos to use with FBOM generator
+        self._SaveEdkInfos()
 
         EdkLogger.info("")
         if self.ArchList:

@@ -2778,14 +2778,27 @@ def Main():
             print('###############')
             print()
 
-            edk_temp_file = path.join(tempfile.gettempdir(), 'edk_temp_file')
-            with open(edk_temp_file) as file:
-                edk_path = file.readline().strip()
-                platform_path = file.readline().strip()
-                build_target = file.readline().strip()
-                build_toolchain = file.readline().strip()
+            edk_path = GlobalData.bomEdkPath
+            platform_path = GlobalData.bomPlatformPath
+            build_target = GlobalData.bomBuildTarget
+            build_toolchain = GlobalData.bomBuildToolchain
+            author = 'BOMCreator'
+            regid = 'br.com.firmwarebom'
 
-                #TODO add executable path and run the bom generator
+            executable = 'fbom'
+
+            command = [executable, edk_path, platform_path, build_target, build_toolchain, author, regid]
+
+            # Run the command and wait for it to finish
+            process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # Get the return code
+            return_code = process.returncode
+
+            if return_code == 0:
+                print('BOM generated with success!')
+            else:
+                print('Something went wrong during BOM generation')
 
 
     EdkLogger.SetLevel(EdkLogger.QUIET)
