@@ -342,14 +342,17 @@ if %ERRORLEVEL% NEQ 0 (
 
 endlocal
 
-%PYTHON_COMMAND% -c "import edk2basetools" >NUL 2>NUL
-if %ERRORLEVEL% EQU 0 (
-  goto use_pip_basetools
-) else (
-  REM reset ERRORLEVEL
-  type nul>nul
-  goto use_builtin_basetools
-)
+:: %PYTHON_COMMAND% -c "import edk2basetools" >NUL 2>NUL
+:: if %ERRORLEVEL% EQU 0 (
+::   goto use_pip_basetools
+:: ) else (
+::   REM reset ERRORLEVEL
+::   type nul>nul
+::   goto use_builtin_basetools
+:: )
+
+REM always use in-source basetools
+goto use_builtin_basetools
 
 :use_builtin_basetools
   @echo Using EDK2 in-source Basetools
