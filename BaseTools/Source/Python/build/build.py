@@ -2785,7 +2785,7 @@ def Main():
             author = 'BOMCreator'
             regid = 'br.com.firmwarebom'
 
-            executable = 'fbom'
+            executable = 'fbom' if sys.platform == 'linux' else 'fbom.exe'
 
             command = [executable, edk_path, platform_path, build_target, build_toolchain, author, regid]
 
